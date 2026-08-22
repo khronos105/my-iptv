@@ -1,0 +1,27 @@
+services:
+  threadfin:
+    image: fyb3roptik/threadfin:1.2.16
+    container_name: threadfin
+    restart: unless-stopped
+    ports:
+      - "34400:34400" # Maps the web UI port to your PC
+    environment:
+      - PUID=1000      # Optional: Set to your user ID for file permissions
+      - PGID=1000      # Optional: Set to your group ID for file permissions
+      - TZ=Europe/Madrid # Replace with your timezone, e.g., Europe/London
+      # - THREADFIN_DEBUG=0 # Uncomment to set debug level (0-3)
+    volumes:
+      - ./threadfin/config:/home/threadfin/conf # Stores all your settings
+      - ./threadfin/temp:/tmp/threadfin:rw      # Temporary file storage
+
+  epg:
+    image: ghcr.io/iptv-org/epg:master
+    container_name: epg
+    restart: unless-stopped
+    ports:
+      - "3001:3000" # guide.xml browsable at http://localhost:3001/guide.xml on the host
+    environment:
+      - CRON_SCHEDULE=0 5 * * * # re-grab daily at 05:00
+      - RUN_AT_STARTUP=true
+    volumes:
+      - ./epg/channels.xml:/epg/public/channels.xml:ro
