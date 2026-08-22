@@ -1,2 +1,4 @@
-epg/**
-threadfin/**
+epg/*
+!epg/.gitkeep
+threadfin/*
+!threadfin/.gitkeep
